@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="مختبر التوقعات: توقعات مباريات كرة القدم بنموذج إحصائي، نتائج، ترتيب وحاسبة قيمة الأودز.">
+<meta name="theme-color" content="#04070e">
+<title>مختبر التوقعات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#04070e;--sf:#0c1424;--sf2:#121d33;--ln:#1f2f4d;--tx:#e8edf7;--mu:#8a9bb8;--h:#3fd0c9;--dr:#6b7a99;--aw:#f2a65a;--val:#ffd166;--bad:#ff6b6b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){color-scheme:light;--bg:#f3f6fb;--sf:#fff;--sf2:#eaf0f9;--ln:#d3ddec;--tx:#0d1a30;--mu:#5a6b88;--h:#0a9a94;--dr:#8392ae;--aw:#c9761f;--val:#a87400;--bad:#c0392b}}
+:root[data-theme="light"]{color-scheme:light;--bg:#f3f6fb;--sf:#fff;--sf2:#eaf0f9;--ln:#d3ddec;--tx:#0d1a30;--mu:#5a6b88;--h:#0a9a94;--dr:#8392ae;--aw:#c9761f;--val:#a87400;--bad:#c0392b}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;line-height:1.7;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--ln)}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 0 8px}
+h1{font-size:1.35rem;margin:0;font-weight:700}
+.note{color:var(--mu);font-size:.8rem;margin:0}
+nav{display:flex;gap:4px;overflow-x:auto;padding-bottom:8px}
+nav button{flex:1 0 auto;background:none;border:0;border-bottom:3px solid transparent;color:var(--mu);font:inherit;font-weight:500;padding:8px 14px;cursor:pointer}
+nav button[aria-selected="true"]{color:var(--tx);border-color:var(--h)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--val);outline-offset:2px}
+main{padding:20px 16px 48px;max-width:960px;margin:0 auto}
+.banner{background:var(--sf2);border:1px solid var(--ln);border-radius:10px;padding:10px 14px;font-size:.85rem;color:var(--mu);margin-bottom:18px}
+h2{font-size:1.1rem;margin:22px 0 10px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;font-weight:700}
+.teams span:last-child{text-align:left}
+.meta{color:var(--mu);font-size:.8rem}
+.bar{display:flex;height:34px;border-radius:8px;overflow:hidden;margin:10px 0 6px;font-size:.85rem;font-weight:700;color:#04070e}
+.bar div{display:flex;align-items:center;justify-content:center;min-width:0;transition:flex-basis .5s}
+.bar .h{background:var(--h)}.bar .d{background:var(--dr);color:#fff}.bar .a{background:var(--aw)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chip{background:var(--sf2);border:1px solid var(--ln);border-radius:20px;padding:2px 12px;font-size:.8rem}
+.chip.v{border-color:var(--val);color:var(--val)}
+.pick{font-size:.85rem;color:var(--mu)}
+select,input{background:var(--sf2);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:9px 10px;font:inherit;width:100%}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+label{font-size:.8rem;color:var(--mu);display:block;margin-bottom:4px}
+.btn{background:var(--h);color:#04070e;border:0;border-radius:8px;padding:10px 18px;font:inherit;font-weight:700;cursor:pointer}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:520px}
+th,td{padding:9px 8px;text-align:center;border-bottom:1px solid var(--ln)}
+th{color:var(--mu);font-weight:500}
+td:nth-child(2),th:nth-child(2){text-align:right}
+tr.ucl td:first-child{box-shadow:inset -3px 0 var(--h)}
+.score{font-weight:700;font-size:1.05rem;direction:ltr;unicode-bidi:isolate}
+.big{font-size:1.6rem;font-weight:700}
+.good{color:var(--val)}.bad{color:var(--bad)}
+.hide{display:none}
+@media (max-width:520px){.grid3{grid-template-columns:1fr}h1{font-size:1.15rem}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+ <div class="wrap">
+  <div class="top"><h1>مختبر التوقعات</h1><p class="note">نموذج بواسون الإحصائي</p></div>
+  <nav role="tablist" aria-label="الأقسام">
+   <button role="tab" data-t="predictions">التوقعات</button>
+   <button role="tab" data-t="results">النتائج</button>
+   <button role="tab" data-t="table">الترتيب</button>
+   <button role="tab" data-t="value">حاسبة القيمة</button>
+  </nav>
+ </div>
+</header>
+<main>
+ <div class="banner">البيانات في هذه النسخة تجريبية لأغراض العرض. اربط التطبيق بمصدر بيانات حقيقي لعرض مباريات وأودز فعلية. التوقعات احتمالات إحصائية وليست ضمانًا للنتيجة.</div>
+
+ <section id="predictions">
+  <div class="card">
+   <div class="grid2">
+    <div><label for="selH">صاحب الأرض</label><select id="selH"></select></div>
+    <div><label for="selA">الضيف</label><select id="selA"></select></div>
+   </div>
+   <div id="custom" style="margin-top:12px"></div>
+  </div>
+  <h2>مباريات قادمة</h2>
+  <div id="fixtures"></div>
+ </section>
+
+ <section id="results" class="hide"><h2>آخر النتائج</h2><div id="resList"></div></section>
+
+ <section id="table" class="hide">
+  <h2>جدول الترتيب</h2>
+  <div class="card tw"><table><thead><tr><th>#</th><th>الفريق</th><th>لعب</th><th>فوز</th><th>تعادل</th><th>خسارة</th><th>له/عليه</th><th>فارق</th><th>نقاط</th></tr></thead><tbody id="tbody"></tbody></table></div>
+ </section>
+
+ <section id="value" class="hide">
+  <h2>حاسبة نسبة القيمة</h2>
+  <div class="card">
+   <p class="note" style="margin-bottom:12px">أدخل احتمالك للنتيجة والأودز العشري. القيمة موجبة عندما يتجاوز احتمالك الاحتمال الضمني في الأودز.</p>
+   <div class="grid3">
+    <div><label for="vp">احتمالك (%)</label><input id="vp" type="number" min="1" max="99" step="0.1" inputmode="decimal" value="55"></div>
+    <div><label for="vo">الأودز العشري</label><input id="vo" type="number" min="1.01" step="0.01" inputmode="decimal" value="2.00"></div>
+    <div><label for="vs">المبلغ المقترح للمراقبة</label><input id="vs" type="number" min="1" step="1" inputmode="numeric" value="100"></div>
+   </div>
+   <div id="vout" style="margin-top:14px" aria-live="polite"></div>
+  </div>
+  <h2>أفضل قيمة في المباريات القادمة</h2>
+  <div id="vlist"></div>
+ </section>
+</main>
+
+<script>
+(function(){
+"use strict";
+// بيانات تجريبية: a = قوة الهجوم، d = ضعف الدفاع (1 = المتوسط)
+var T={
+ liv:{n:"ليفربول",a:1.30,d:0.80},
+ mci:{n:"مانشستر سيتي",a:1.38,d:0.74},
+ ars:{n:"أرسنال",a:1.22,d:0.72},
+ che:{n:"تشيلسي",a:1.12,d:0.95},
+ mun:{n:"مانشستر يونايتد",a:0.98,d:1.08},
+ tot:{n:"توتنهام",a:1.10,d:1.10},
+ new:{n:"نيوكاسل",a:1.06,d:0.92},
+ avl:{n:"أستون فيلا",a:1.02,d:0.98}
+};
+var FIX=[
+ {h:"mci",a:"liv",d:"الجمعة 13 نوفمبر - 22:00",o:[2.30,3.60,3.10]},
+ {h:"ars",a:"tot",d:"السبت 14 نوفمبر - 17:30",o:[1.55,4.40,5.60]},
+ {h:"che",a:"new",d:"السبت 14 نوفمبر - 20:00",o:[2.05,3.50,3.60]},
+ {h:"mun",a:"avl",d:"الأحد 15 نوفمبر - 18:30",o:[2.40,3.40,2.95]},
+ {h:"avl",a:"ars",d:"الأحد 15 نوفمبر - 21:00",o:[4.60,3.90,1.68]},
+ {h:"tot",a:"liv",d:"الاثنين 16 نوفمبر - 22:00",o:[3.80,3.80,1.92]}
+];
+var RES=[
+ ["liv","che",2,1],["ars","mun",3,0],["mci","tot",4,1],["new","avl",1,1],
+ ["che","ars",0,2],["tot","new",2,2],["mun","liv",1,2],["avl","mci",0,3],
+ ["liv","ars",1,1],["mci","new",2,0],["tot","che",1,0],["avl","mun",2,1]
+];
+var $=function(s){return document.querySelector(s)};
+var fact=[1];for(var i=1;i<=12;i++)fact[i]=fact[i-1]*i;
+function pois(l,k){return Math.exp(-l)*Math.pow(l,k)/fact[k]}
+function predict(h,a){
+ var lh=1.45*T[h].a*T[a].d, la=1.15*T[a].a*T[h].d;
+ var H=0,D=0,A=0,o25=0,btts=0,best=[0,0,0],N=8;
+ for(var x=0;x<N;x++)for(var y=0;y<N;y++){
+  var p=pois(lh,x)*pois(la,y);
+  if(x>y)H+=p;else if(x===y)D+=p;else A+=p;
+  if(x+y>2)o25+=p;
+  if(x>0&&y>0)btts+=p;
+  if(p>best[0])best=[p,x,y];
+ }
+ var s=H+D+A;
+ return{h:H/s,d:D/s,a:A/s,o25:o25/s,btts:btts/s,sc:best[1]+"-"+best[2],lh:lh,la:la};
+}
+var pc=function(v){return Math.round(v*100)};
+function bar(p){
+ var h=pc(p.h),a=pc(p.a),d=100-h-a;
+ return '<div class="bar" role="img" aria-label="فوز المضيف '+h+'% تعادل '+d+'% فوز الضيف '+a+'%">'
+  +'<div class="h" style="flex-basis:'+h+'%">'+h+'%</div>'
+  +'<div class="d" style="flex-basis:'+d+'%">'+d+'%</div>'
+  +'<div class="a" style="flex-basis:'+a+'%">'+a+'%</div></div>';
+}
+function chips(p){
+ return '<div class="chips"><span class="chip">النتيجة الأرجح '+p.sc+'</span>'
+  +'<span class="chip">أكثر من 2.5 هدف '+pc(p.o25)+'%</span>'
+  +'<span class="chip">يسجل الفريقان '+pc(p.btts)+'%</span></div>';
+}
+var LBL=["فوز "+"المضيف","تعادل","فوز الضيف"];
+function edges(p,o){
+ var pr=[p.h,p.d,p.a];
+ return pr.map(function(x,i){return{i:i,e:x*o[i]-1,p:x,o:o[i]}});
+}
+function bestEdge(p,o){return edges(p,o).sort(function(a,b){return b.e-a.e})[0]}
+
+// القوائم
+var opts=Object.keys(T).map(function(k){return '<option value="'+k+'">'+T[k].n+'</option>'}).join("");
+$("#selH").innerHTML=opts;$("#selA").innerHTML=opts;
+$("#selA").value="liv";$("#selH").value="mci";
+function renderCustom(){
+ var h=$("#selH").value,a=$("#selA").value,box=$("#custom");
+ if(h===a){box.innerHTML='<p class="bad" style="margin:0">اختر فريقين مختلفين لعرض التوقع.</p>';return}
+ var p=predict(h,a);
+ box.innerHTML='<div class="teams"><span>'+T[h].n+'</span><span class="meta">ضد</span><span>'+T[a].n+'</span></div>'+bar(p)+chips(p);
+}
+$("#selH").onchange=$("#selA").onchange=renderCustom;
+renderCustom();
+
+// المباريات
+$("#fixtures").innerHTML=FIX.map(function(f){
+ var p=predict(f.h,f.a),b=bestEdge(p,f.o),v=b.e>0.03;
+ return '<article class="card"><div class="meta">'+f.d+'</div>'
+  +'<div class="teams" style="margin-top:4px"><span>'+T[f.h].n+'</span><span class="meta">ضد</span><span>'+T[f.a].n+'</span></div>'
+  +bar(p)+chips(p)
+  +'<div class="chips"><span class="chip">الأودز '+f.o.map(function(x){return x.toFixed(2)}).join(" / ")+'</span>'
+  +(v?'<span class="chip v">قيمة: '+LBL[b.i]+' +'+(b.e*100).toFixed(1)+'%</span>':'<span class="chip">لا توجد قيمة واضحة</span>')+'</div></article>';
+}).join("");
+
+// النتائج
+$("#resList").innerHTML=RES.map(function(r){
+ return '<div class="card row"><span>'+T[r[0]].n+'</span><span class="score">'+r[2]+' - '+r[3]+'</span><span>'+T[r[1]].n+'</span></div>';
+}).join("");
+
+// الترتيب
+var st={};Object.keys(T).forEach(function(k){st[k]={k:k,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0}});
+RES.forEach(function(r){
+ var h=st[r[0]],a=st[r[1]];h.p++;a.p++;h.gf+=r[2];h.ga+=r[3];a.gf+=r[3];a.ga+=r[2];
+ if(r[2]>r[3]){h.w++;a.l++;h.pts+=3}else if(r[2]<r[3]){a.w++;h.l++;a.pts+=3}else{h.d++;a.d++;h.pts++;a.pts++}
+});
+var rows=Object.keys(st).map(function(k){return st[k]}).sort(function(x,y){
+ return y.pts-x.pts||(y.gf-y.ga)-(x.gf-x.ga)||y.gf-x.gf});
+$("#tbody").innerHTML=rows.map(function(s,i){
+ var gd=s.gf-s.ga;
+ return '<tr class="'+(i<2?"ucl":"")+'"><td>'+(i+1)+'</td><td>'+T[s.k].n+'</td><td>'+s.p+'</td><td>'+s.w+'</td><td>'+s.d+'</td><td>'+s.l+'</td><td>'+s.gf+':'+s.ga+'</td><td>'+(gd>0?"+":"")+gd+'</td><td><b>'+s.pts+'</b></td></tr>';
+}).join("");
+
+// حاسبة القيمة
+function calcValue(){
+ var p=parseFloat($("#vp").value)/100,o=parseFloat($("#vo").value),s=parseFloat($("#vs").value)||0,out=$("#vout");
+ if(!(p>0&&p<1)||!(o>1)){out.innerHTML='<p class="bad" style="margin:0">أدخل احتمالًا بين 1 و99 وأودز أكبر من 1.</p>';return}
+ var imp=1/o,e=p*o-1,ev=e*s,kelly=Math.max(0,(p*o-1)/(o-1));
+ out.innerHTML='<div class="grid3">'
+  +'<div><div class="meta">الاحتمال الضمني</div><div class="big">'+(imp*100).toFixed(1)+'%</div></div>'
+  +'<div><div class="meta">نسبة القيمة</div><div class="big '+(e>0?"good":"bad")+'">'+(e>0?"+":"")+(e*100).toFixed(1)+'%</div></div>'
+  +'<div><div class="meta">القيمة المتوقعة</div><div class="big '+(ev>0?"good":"bad")+'">'+(ev>0?"+":"")+ev.toFixed(2)+'</div></div></div>'
+  +'<p class="note" style="margin-top:10px">'+(e>0?'الأودز أعلى من السعر العادل. معيار كيلي الكامل يقترح '+(kelly*100).toFixed(1)+'% من الرصيد، والمحترفون يستخدمون جزءًا منه فقط.':'الأودز أقل من السعر العادل لاحتمالك، فلا توجد قيمة هنا.')+'</p>';
+}
+["#vp","#vo","#vs"].forEach(function(s){$(s).oninput=calcValue});calcValue();
+
+var vl=[];FIX.forEach(function(f){
+ var p=predict(f.h,f.a);edges(p,f.o).forEach(function(x){if(x.e>0.03)vl.push({f:f,x:x})});
+});
+vl.sort(function(a,b){return b.x.e-a.x.e});
+$("#vlist").innerHTML=vl.length?vl.map(function(v){
+ return '<div class="card row"><div><b>'+T[v.f.h].n+' ضد '+T[v.f.a].n+'</b><div class="pick">'+LBL[v.x.i]+' بأودز '+v.x.o.toFixed(2)+' واحتمال النموذج '+pc(v.x.p)+'%</div></div><span class="chip v">+'+(v.x.e*100).toFixed(1)+'%</span></div>';
+}).join(""):'<p class="note">لا توجد فرص قيمة واضحة حاليًا.</p>';
+
+// التبويبات
+var tabs=document.querySelectorAll("nav button"),names=["predictions","results","table","value"];
+function show(){
+ var h=(location.hash||"").slice(1);if(names.indexOf(h)<0)h="predictions";
+ names.forEach(function(n){$("#"+n).classList.toggle("hide",n!==h)});
+ tabs.forEach(function(b){b.setAttribute("aria-selected",b.dataset.t===h)});
+}
+tabs.forEach(function(b){b.onclick=function(){location.hash=b.dataset.t}});
+window.addEventListener("hashchange",show);show();
+})();
+</script>
+</body>
+</html>
